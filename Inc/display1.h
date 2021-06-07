@@ -98,8 +98,7 @@ void DrawLine(uint16_t x_start, uint16_t y_start, uint16_t x_end, uint16_t y_end
 void DrawClearRectangle(uint16_t start_x, uint16_t start_y, uint16_t end_x, uint16_t end_y);
 void DrawCircle(uint16_t x_Position, uint16_t y_Position, int radius, uint16_t color);
 void FillRectangle(uint16_t start_x, uint16_t start_y, uint16_t end_x, uint16_t end_y, uint16_t color);
-void DrawPolygen(vertex Vertex, uint16_t vertexCounter);
-void DrawPolygen1(uint16_t x_middle, uint16_t y_middle, uint16_t x, uint16_t y, int amountOfSides);
+void DrawPolygen(uint16_t x_middle, uint16_t y_middle, uint16_t x, uint16_t y, int amountOfSides);
 void PolygenDrawing(uint16_t x_middle, uint16_t y_middle, uint16_t x, uint16_t y, int amountOfSides);
 
 
