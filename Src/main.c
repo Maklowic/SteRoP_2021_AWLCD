@@ -65,7 +65,7 @@ SDRAM_HandleTypeDef hsdram1;
 
 /* USER CODE BEGIN PV */
 
-
+	uint16_t xx, yy;
 	int p = 0, j=0, k=0;
 
 /* USER CODE END PV */
@@ -109,29 +109,38 @@ void demo2(){
 	uint16_t endy = 40;
 	DrawClearRectangle(startx, starty, endx, endy);
 }
-void demo3(){
-	vertex Vertices = 6;
-	uint16_t vertex_Counter = 6;
-	DrawPolygen(Vertices, vertex_Counter);
-}
 void demo4(){
 	uint16_t x_m = 100;
 	uint16_t y_m = 100;
 	uint16_t x = 100;
 	uint16_t y = 120;
 	int n_sides = 8;
-	DrawPolygen1(x_m, y_m, x, y, n_sides);
+	DrawPolygen(x_m, y_m, x, y, n_sides);
 }
 void demo5(){
-	uint16_t x_m = 50;
-	uint16_t y_m = 50;
-	uint16_t x = 50;
-	uint16_t y = 70;
-	int n_sides = 7;
+	uint16_t x_m = 120;
+	uint16_t y_m = 140;
+	uint16_t x = 150;
+	uint16_t y = 170;
+	int n_sides = 3;
 	PolygenDrawing(x_m, y_m, x, y, n_sides);
+	HAL_Delay(3000);
+	BSP_LCD_Clear(LCD_COLOR_WHITE);
+	PolygenDrawing(x_m, y_m, x, y, n_sides+1);
+	HAL_Delay(3000);
+	BSP_LCD_Clear(LCD_COLOR_WHITE);
+	PolygenDrawing(x_m, y_m, x, y, n_sides+2);
+	HAL_Delay(3000);
+	BSP_LCD_Clear(LCD_COLOR_WHITE);
+	PolygenDrawing(x_m, y_m, x, y, n_sides+3);
+	HAL_Delay(3000);
+	BSP_LCD_Clear(LCD_COLOR_WHITE);
+	PolygenDrawing(x_m, y_m, x, y, n_sides+4);
+	HAL_Delay(3000);
+	BSP_LCD_Clear(LCD_COLOR_WHITE);
 }
 void demo6(){
-	 uint16_t x = 50+p;
+	 uint16_t x = 50;
 	 uint16_t y = 50;
 	for(int i = 20; i <= x; i++){
 		BSP_LCD_DrawPixel(i, y, LCD_COLOR_BLUE);
@@ -139,13 +148,13 @@ void demo6(){
 }
 void demo7(){
 	uint16_t x = 50;
-	uint16_t y = 80+p;
+	uint16_t y = 80;
 	for(int j = 50; j <= y; j++){
 		BSP_LCD_DrawPixel(x, j, LCD_COLOR_BLUE);
 	}
 }
 void demo8(){
-	uint16_t x = 80+p;
+	uint16_t x = 80;
 	uint16_t y = 80;
 	for(int i = 50; i <= x; i++){
 		BSP_LCD_DrawPixel(i, y, LCD_COLOR_BLUE);
@@ -176,7 +185,68 @@ void demo9(){
 		p=0;
 	}
 }
+void demoTS(){
+	TS_StateTypeDef touch_state;
+	    BSP_TS_GetState(&touch_state);
+	    if (touch_state.TouchDetected > 0) {
+	    	xx = touch_state.X;
+	        yy = touch_state.Y;
+	        PolygenDrawing(xx, yy , yy + 20, xx + 10, 5);
+	    }
+}
+void demoTS(){
+	TS_StateTypeDef touch_state;
+	    BSP_TS_GetState(&touch_state);
+	    if (touch_state.TouchDetected > 0) {
+	    	xx = touch_state.X;
+	        yy = touch_state.Y;
+	        PolygenDrawing(xx, yy , yy + 20, xx + 10, 5);
+	    }
+}
 
+void demo10(){
+	uint16_t xm = 100;
+	uint16_t ym = 50;
+	uint16_t x = 100;
+	uint16_t y = 70;
+	int n_sides = 4;
+	for(int i = 20; i <= xm; i++){
+		DrawPolygen(i, ym, i, y, n_sides);
+		HAL_Delay(50);
+	}
+}
+void demo11(){
+	uint16_t xm = 100;
+	uint16_t ym = 150;
+	uint16_t x = 100;
+	uint16_t y = 170;
+	int n_sides = 4;
+	for(int j = 50; j <= ym; j++){
+		for (int k = 70; k <= y; k++){
+			DrawPolygen(x, j, xm, k, n_sides);
+			HAL_Delay(50);
+		}
+	}
+}
+void demo12(){
+	uint16_t xm = 200;
+	uint16_t ym = 150;
+	uint16_t x = 200;
+	uint16_t y = 170;
+	int n_sides = 4;
+	for(int i = 100; i <= xm; i++){
+		DrawPolygen(i, ym, i, y, n_sides);
+		HAL_Delay(50);
+	}
+}
+void animation2(){
+	demo10();
+	demo11();
+	demo12();
+}
+void demo_circ(){
+	DrawCircle(150, 150, k, RGB_COL_BLUE);
+}
 /* USER CODE END 0 */
 
 /**
@@ -222,16 +292,12 @@ int main(void)
   /* USER CODE BEGIN 2 */
   DBuff_init();
   BSP_LCD_DisplayOn();                                                //Wlaczenie podswietlania
-  BSP_LCD_Clear(LCD_COLOR_WHITE);                                     //Kolor Tla
+  BSP_LCD_Clear(LCD_COLOR_WHITE);  //Kolor Tla
+  // Podwójne buforowanie
   BSP_SDRAM_Init();
 
-  TS_StateTypeDef touch_state;
-  BSP_TS_GetState(&touch_state);
-  if (touch_state.TouchDetected > 0) {
-	  touch_state.X;
-     touch_state.Y;
-     PolygenDrawing(touch_state.X, touch_state.Y, 20, 40, 5);
-  }
+ // Ekran dotykowy
+  BSP_TS_Init(LCD_WIDTH, LCD_LENGTH);
 
   /* USER CODE END 2 */
 
@@ -241,19 +307,22 @@ int main(void)
   while (1)
   {
 	  DBuff_swap_buff();
-	  //BSP_LCD_DrawBitmap(0, 0, (uint8_t *)ironman);
+//	  BSP_LCD_DrawBitmap(0, 0, (uint8_t *)ironman);
 //    demo();
 //	  demo2();
 //	  demo3();
 //	  demo4();
 //	  demo5();
-	  //animation();
+//	  animation();
 //	  demo9();
-	  p++;
-	  j+=10;
-	  k+=20;
-//	  BSP_LCD_Clear(LCD_COLOR_WHITE);
+//	  demoTS();
+//	  animation2();
+	  //demo_circ();
 
+//	  BSP_LCD_Clear(LCD_COLOR_WHITE);
+	  p+=5;
+	  j+=5;
+	  k+=1;
 	  /* USER CODE END WHILE */
     MX_USB_HOST_Process();
 
