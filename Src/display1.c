@@ -46,10 +46,10 @@ void DrawLine(uint16_t x_start, uint16_t y_start, uint16_t x_end, uint16_t y_end
 	 for (; x_start <= x_end; x_start++)
 	 {
 		if (steep){
-			DrawPixel_WithCords(y_start, x_start);
+			BSP_LCD_DrawPixel(y_start, x_start, LCD_COLOR_BLACK);
 		}
 		else{
-			DrawPixel_WithCords(x_start, y_start);
+			BSP_LCD_DrawPixel(x_start, y_start,  LCD_COLOR_BLACK);
 		}
 		err -= dy;
 		if (err < 0){
@@ -75,10 +75,10 @@ void DrawCircle(uint16_t x_Position, uint16_t y_Position, int radius, uint16_t c
 	int x = 0;
 	int y = radius;
 
-	DrawPixel_WithCords(x_Position, y_Position + radius);
-	DrawPixel_WithCords(x_Position, y_Position - radius);
-	DrawPixel_WithCords(x_Position + radius, y_Position);
-	DrawPixel_WithCords(x_Position - radius, y_Position);
+	BSP_LCD_DrawPixel(x_Position, y_Position + radius, LCD_COLOR_BLACK);
+	BSP_LCD_DrawPixel(x_Position, y_Position - radius, LCD_COLOR_BLACK);
+	BSP_LCD_DrawPixel(x_Position + radius, y_Position, LCD_COLOR_BLACK);
+	BSP_LCD_DrawPixel(x_Position - radius, y_Position, LCD_COLOR_BLACK);
 	while (x < y){
 		if (f >= 0){
 			y--;
@@ -88,18 +88,18 @@ void DrawCircle(uint16_t x_Position, uint16_t y_Position, int radius, uint16_t c
     x++;
     ddF_x += 2;
     f += ddF_x;
-    DrawPixel_WithCords(x_Position + x, y_Position + y);
-    DrawPixel_WithCords(x_Position - x, y_Position + y);
-    DrawPixel_WithCords(x_Position + x, y_Position - y);
-    DrawPixel_WithCords(x_Position - x ,y_Position - y);
-    DrawPixel_WithCords(x_Position + y, y_Position + x);
-    DrawPixel_WithCords(x_Position - y, y_Position + x);
-    DrawPixel_WithCords(x_Position + y, y_Position - x);
-    DrawPixel_WithCords(x_Position - y, y_Position - x);
+    BSP_LCD_DrawPixel(x_Position + x, y_Position + y, LCD_COLOR_BLACK);
+    BSP_LCD_DrawPixel(x_Position - x, y_Position + y, LCD_COLOR_BLACK);
+    BSP_LCD_DrawPixel(x_Position + x, y_Position - y, LCD_COLOR_BLACK);
+    BSP_LCD_DrawPixel(x_Position - x ,y_Position - y, LCD_COLOR_BLACK);
+    BSP_LCD_DrawPixel(x_Position + y, y_Position + x, LCD_COLOR_BLACK);
+    BSP_LCD_DrawPixel(x_Position - y, y_Position + x, LCD_COLOR_BLACK);
+    BSP_LCD_DrawPixel(x_Position + y, y_Position - x, LCD_COLOR_BLACK);
+    BSP_LCD_DrawPixel(x_Position - y, y_Position - x, LCD_COLOR_BLACK);
   }
 }
 
-void FillRectangle(uint16_t start_x, uint16_t start_y, uint16_t end_x, uint16_t end_y, uint16_t color)
+void FillRectangle(uint16_t start_x, uint16_t start_y, uint16_t end_x, uint16_t end_y,  uint16_t color)
 {
     uint32_t xPosition;
     uint32_t yPosition;
@@ -118,25 +118,11 @@ void FillRectangle(uint16_t start_x, uint16_t start_y, uint16_t end_x, uint16_t 
         }
   }
 }
- void DrawPolygen(vertex Vertex, uint16_t vertexCounter){
-	 int16_t x = 0, y  = 0;
-	 uint32_t color = 0x0000;
-	 if(vertexCounter < 2){
-		 return;
-	 }
-	 DrawLine(Vertex->X, Vertex->Y, (Vertex + vertexCounter - 1)->X, (Vertex + vertexCounter - 1)->Y);
 
-	 while(--vertexCounter){
-		 x = Vertex->X;
-		 y = Vertex->Y;
-		 Vertex++;
-		 DrawLine(x, y, Vertex->X, Vertex->Y);
-	 }
- }
- void DrawPolygen1(uint16_t x_middle, uint16_t y_middle, uint16_t x, uint16_t y, int amountOfSides){
+ void DrawPolygen(uint16_t x_middle, uint16_t y_middle, uint16_t x, uint16_t y, int amountOfSides){
 
 	 uint16_t x_end, y_end;
-	 uint16_t color = 0x0000;
+	 uint32_t color = 0x0000;
 	 double r = sqrt(pow((x - x_middle), 2) + pow((y - y_middle), 2));
 	 double a = atan2(y - y_middle, x - x_middle);
 	 for(int i = 1; i <= amountOfSides; i++){
