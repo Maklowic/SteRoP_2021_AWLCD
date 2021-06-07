@@ -15,13 +15,13 @@ void DBuff_swap_buff(void) {
   // VSYNC
 	while (!(LTDC->CDSR & LTDC_CDSR_VSYNCS));
 
-	    if (visible_layer == 0) {
-	        visible_layer = 1;
+	    if (swap == 0) {
+	        swap= 1;
 	        BSP_LCD_SetLayerVisible(LCD_FOREGROUND_LAYER, ENABLE);
 	        BSP_LCD_SetLayerVisible(LCD_BACKGROUND_LAYER, DISABLE);
 	        BSP_LCD_SelectLayer(LCD_BACKGROUND_LAYER);
 	    } else {
-	        visible_layer = 0;
+	        swap= 0;
 	        BSP_LCD_SetLayerVisible(LCD_BACKGROUND_LAYER, ENABLE);
 	        BSP_LCD_SetLayerVisible(LCD_FOREGROUND_LAYER, DISABLE);
 	        BSP_LCD_SelectLayer(LCD_FOREGROUND_LAYER);
