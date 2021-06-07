@@ -1,8 +1,8 @@
-## SteRoP_2021_AWLCD
+# SteRoP_2021_AWLCD
 
-# Grupa projektowa
+### Grupa projektowa
 * Michał Maćkowiak
 * Wojtek Chojnowski
 
-# Prowadzący
+### Prowadzący
 * dr inż. Wojciech Domski
