@@ -13,7 +13,7 @@ void DBuff_init() {
 
 void DBuff_swap_buff(void) {
   // VSYNC
-	while (!(LTDC->CDSR & LTDC_CDSR_VSYNCS));
+	while (!(LTDC->CDSR & LTDC_CDSR_VSYNCS)){}
 
 	    if (swap == 0) {
 	        swap= 1;
