@@ -11,13 +11,13 @@ uint32_t ILI9341_CurrentOrientation;
 static uint16_t SetGlobalYCursor;
 static uint32_t SetGlobalCursor;
 
-void DrawPixel_WithCords(uint16_t Xpos, uint16_t Ypos, uint32_t color)
+void DrawPixel_WithCords(uint16_t Xpos, uint16_t Ypos)
 {
-	*(  uint16_t*)(SetGlobalCursor) = color;
+	//*(  uint16_t*)(SetGlobalCursor) = color;
 	SetGlobalCursor = ILI9341_CurrentFrameBuffer + (2 * ((Ypos * ILI9341_X) + Xpos));
 }
 
-void DrawLine(uint16_t x_start, uint16_t y_start, uint16_t x_end, uint16_t y_end, uint16_t color)
+void DrawLine(uint16_t x_start, uint16_t y_start, uint16_t x_end, uint16_t y_end)
 {
 	 int steep = abs(y_end - y_start) > abs(x_end - x_start);
 	 int dx = 0;
@@ -46,10 +46,10 @@ void DrawLine(uint16_t x_start, uint16_t y_start, uint16_t x_end, uint16_t y_end
 	 for (; x_start <= x_end; x_start++)
 	 {
 		if (steep){
-			DrawPixel_WithCords(y_start, x_start, color);
+			DrawPixel_WithCords(y_start, x_start);
 		}
 		else{
-			DrawPixel_WithCords(x_start, y_start, color);
+			DrawPixel_WithCords(x_start, y_start);
 		}
 		err -= dy;
 		if (err < 0){
@@ -59,12 +59,12 @@ void DrawLine(uint16_t x_start, uint16_t y_start, uint16_t x_end, uint16_t y_end
 	 }
 }
 
-void DrawClearRectangle(uint16_t start_x, uint16_t start_y, uint16_t end_x, uint16_t end_y, uint16_t color)
+void DrawClearRectangle(uint16_t start_x, uint16_t start_y, uint16_t end_x, uint16_t end_y)
 {
-	DrawLine(start_x, start_y, end_x, start_y, color);
-	DrawLine(end_x, start_y, end_x, end_y, color);
-	DrawLine(start_x, start_y, start_x, end_y, color);
-	DrawLine(start_x, end_y, end_x, end_y, color);
+	DrawLine(start_x, start_y, end_x, start_y);
+	DrawLine(end_x, start_y, end_x, end_y);
+	DrawLine(start_x, start_y, start_x, end_y);
+	DrawLine(start_x, end_y, end_x, end_y);
 }
 
 void DrawCircle(uint16_t x_Position, uint16_t y_Position, int radius, uint16_t color)
@@ -75,10 +75,10 @@ void DrawCircle(uint16_t x_Position, uint16_t y_Position, int radius, uint16_t c
 	int x = 0;
 	int y = radius;
 
-	DrawPixel_WithCords(x_Position, y_Position + radius, color);
-	DrawPixel_WithCords(x_Position, y_Position - radius, color);
-	DrawPixel_WithCords(x_Position + radius, y_Position, color);
-	DrawPixel_WithCords(x_Position - radius, y_Position, color);
+	DrawPixel_WithCords(x_Position, y_Position + radius);
+	DrawPixel_WithCords(x_Position, y_Position - radius);
+	DrawPixel_WithCords(x_Position + radius, y_Position);
+	DrawPixel_WithCords(x_Position - radius, y_Position);
 	while (x < y){
 		if (f >= 0){
 			y--;
@@ -88,14 +88,14 @@ void DrawCircle(uint16_t x_Position, uint16_t y_Position, int radius, uint16_t c
     x++;
     ddF_x += 2;
     f += ddF_x;
-    DrawPixel_WithCords(x_Position + x, y_Position + y, color);
-    DrawPixel_WithCords(x_Position - x, y_Position + y, color);
-    DrawPixel_WithCords(x_Position + x, y_Position - y, color);
-    DrawPixel_WithCords(x_Position - x ,y_Position - y, color);
-    DrawPixel_WithCords(x_Position + y, y_Position + x, color);
-    DrawPixel_WithCords(x_Position - y, y_Position + x, color);
-    DrawPixel_WithCords(x_Position + y, y_Position - x, color);
-    DrawPixel_WithCords(x_Position - y, y_Position - x , color);
+    DrawPixel_WithCords(x_Position + x, y_Position + y);
+    DrawPixel_WithCords(x_Position - x, y_Position + y);
+    DrawPixel_WithCords(x_Position + x, y_Position - y);
+    DrawPixel_WithCords(x_Position - x ,y_Position - y);
+    DrawPixel_WithCords(x_Position + y, y_Position + x);
+    DrawPixel_WithCords(x_Position - y, y_Position + x);
+    DrawPixel_WithCords(x_Position + y, y_Position - x);
+    DrawPixel_WithCords(x_Position - y, y_Position - x);
   }
 }
 
@@ -124,13 +124,13 @@ void FillRectangle(uint16_t start_x, uint16_t start_y, uint16_t end_x, uint16_t 
 	 if(vertexCounter < 2){
 		 return;
 	 }
-	 DrawLine(Vertex->X, Vertex->Y, (Vertex + vertexCounter - 1)->X, (Vertex + vertexCounter - 1)->Y, color);
+	 DrawLine(Vertex->X, Vertex->Y, (Vertex + vertexCounter - 1)->X, (Vertex + vertexCounter - 1)->Y);
 
 	 while(--vertexCounter){
 		 x = Vertex->X;
 		 y = Vertex->Y;
 		 Vertex++;
-		 DrawLine(x, y, Vertex->X, Vertex->Y, color);
+		 DrawLine(x, y, Vertex->X, Vertex->Y);
 	 }
  }
  void DrawPolygen1(uint16_t x_middle, uint16_t y_middle, uint16_t x, uint16_t y, int amountOfSides){
@@ -145,7 +145,7 @@ void FillRectangle(uint16_t start_x, uint16_t start_y, uint16_t end_x, uint16_t 
 		 a = a + PI * 2 / amountOfSides;
 		 x = round((double)x_middle + (double)r * cos(a));
 		 y = round((double)y_middle + (double)r * sin(a));
-		 DrawLine(x, y, x_end, y_end, color);
+		 DrawLine(x, y, x_end, y_end);
 	 }
  }
 

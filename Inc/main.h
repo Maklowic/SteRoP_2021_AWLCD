@@ -33,6 +33,7 @@ extern "C" {
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "display1.h"
+#include "stm32f429i_discovery_ts.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/

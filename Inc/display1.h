@@ -93,9 +93,9 @@ typedef struct{
 
 #define kSwapVariable(a,b) {int16_t t=a;a=b;b=t;}
 
-void DrawPixel_WithCords(uint16_t Xpos, uint16_t Ypos, uint32_t color);
-void DrawLine(uint16_t x_start, uint16_t y_start, uint16_t x_end, uint16_t y_end, uint16_t color);
-void DrawClearRectangle(uint16_t start_x, uint16_t start_y, uint16_t end_x, uint16_t end_y, uint16_t color);
+void DrawPixel_WithCords(uint16_t Xpos, uint16_t Ypos);
+void DrawLine(uint16_t x_start, uint16_t y_start, uint16_t x_end, uint16_t y_end);
+void DrawClearRectangle(uint16_t start_x, uint16_t start_y, uint16_t end_x, uint16_t end_y);
 void DrawCircle(uint16_t x_Position, uint16_t y_Position, int radius, uint16_t color);
 void FillRectangle(uint16_t start_x, uint16_t start_y, uint16_t end_x, uint16_t end_y, uint16_t color);
 void DrawPolygen(vertex Vertex, uint16_t vertexCounter);

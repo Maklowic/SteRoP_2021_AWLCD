@@ -19,15 +19,17 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "cmsis_os.h"
 #include "usb_host.h"
-
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "stm32f429i_discovery_lcd.h"
 #include "stm32f429i_discovery_sdram.h"
 #include "stm32f429i_discovery.h"
+#include "double_buff.h"
+#include "stlogo.h"
+#include "ironman.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -61,8 +63,10 @@ UART_HandleTypeDef huart1;
 
 SDRAM_HandleTypeDef hsdram1;
 
-osThreadId defaultTaskHandle;
 /* USER CODE BEGIN PV */
+
+
+	int p = 0, j=0, k=0;
 
 /* USER CODE END PV */
 
@@ -77,7 +81,7 @@ static void MX_LTDC_Init(void);
 static void MX_SPI5_Init(void);
 static void MX_TIM1_Init(void);
 static void MX_USART1_UART_Init(void);
-void StartDefaultTask(void const * argument);
+void MX_USB_HOST_Process(void);
 
 /* USER CODE BEGIN PFP */
 
@@ -103,8 +107,7 @@ void demo2(){
 	uint16_t starty = 20;
 	uint16_t endx = 40;
 	uint16_t endy = 40;
-	uint16_t blackcolour = 0x0000;
-	DrawClearRectangle(startx, starty, endx, endy, blackcolour);
+	DrawClearRectangle(startx, starty, endx, endy);
 }
 void demo3(){
 	vertex Vertices = 6;
@@ -124,9 +127,56 @@ void demo5(){
 	uint16_t y_m = 50;
 	uint16_t x = 50;
 	uint16_t y = 70;
-	int n_sides = 8;
+	int n_sides = 7;
 	PolygenDrawing(x_m, y_m, x, y, n_sides);
 }
+void demo6(){
+	 uint16_t x = 50+p;
+	 uint16_t y = 50;
+	for(int i = 20; i <= x; i++){
+		BSP_LCD_DrawPixel(i, y, LCD_COLOR_BLUE);
+	}
+}
+void demo7(){
+	uint16_t x = 50;
+	uint16_t y = 80+p;
+	for(int j = 50; j <= y; j++){
+		BSP_LCD_DrawPixel(x, j, LCD_COLOR_BLUE);
+	}
+}
+void demo8(){
+	uint16_t x = 80+p;
+	uint16_t y = 80;
+	for(int i = 50; i <= x; i++){
+		BSP_LCD_DrawPixel(i, y, LCD_COLOR_BLUE);
+	}
+}
+void animation(){
+	demo6();
+	demo7();
+	demo8();
+}
+void demo9(){
+	uint16_t x_m = 100;
+	uint16_t y_m = 150;
+	uint16_t x = 0;
+	uint16_t y = 0;
+	int n_sides = 3;
+	  PolygenDrawing(x_m, y_m, x+j, y+k, n_sides+p);
+	p++;
+	j+=10;
+	k+=20;
+	if(k==100) {
+		k = 0;
+	}
+	if(j==70){
+		j = 0;
+	}
+	if(p==20){
+		p=0;
+	}
+}
+
 /* USER CODE END 0 */
 
 /**
@@ -136,6 +186,9 @@ void demo5(){
 int main(void)
 {
   /* USER CODE BEGIN 1 */
+
+
+
 
   /* USER CODE END 1 */
 
@@ -165,59 +218,46 @@ int main(void)
   MX_SPI5_Init();
   MX_TIM1_Init();
   MX_USART1_UART_Init();
+  MX_USB_HOST_Init();
   /* USER CODE BEGIN 2 */
-  BSP_LCD_Init();                                                     //Wlaczenie biblioteki
-  BSP_LCD_LayerDefaultInit(LCD_BACKGROUND_LAYER, LCD_FRAME_BUFFER);   //Wlaczenie pierwszej warstw
-  BSP_LCD_LayerDefaultInit(LCD_FOREGROUND_LAYER, LCD_FRAME_BUFFER);   //Wlaczenie drugiej warstwy
-  BSP_LCD_SelectLayer(LCD_FOREGROUND_LAYER);                          //Wybranie warstwy aktywnej
+  DBuff_init();
   BSP_LCD_DisplayOn();                                                //Wlaczenie podswietlania
-  BSP_LCD_Clear(LCD_COLOR_BLACK);                                     //Kolor Tla
+  BSP_LCD_Clear(LCD_COLOR_WHITE);                                     //Kolor Tla
   BSP_SDRAM_Init();
+
+  TS_StateTypeDef touch_state;
+  BSP_TS_GetState(&touch_state);
+  if (touch_state.TouchDetected > 0) {
+	  touch_state.X;
+     touch_state.Y;
+     PolygenDrawing(touch_state.X, touch_state.Y, 20, 40, 5);
+  }
+
   /* USER CODE END 2 */
 
-  /* USER CODE BEGIN RTOS_MUTEX */
-  /* add mutexes, ... */
-  /* USER CODE END RTOS_MUTEX */
-
-  /* USER CODE BEGIN RTOS_SEMAPHORES */
-  /* add semaphores, ... */
-  /* USER CODE END RTOS_SEMAPHORES */
-
-  /* USER CODE BEGIN RTOS_TIMERS */
-  /* start timers, add new ones, ... */
-  /* USER CODE END RTOS_TIMERS */
-
-  /* USER CODE BEGIN RTOS_QUEUES */
-  /* add queues, ... */
-  /* USER CODE END RTOS_QUEUES */
-
-  /* Create the thread(s) */
-  /* definition and creation of defaultTask */
-  osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 4096);
-  defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
-
-  /* USER CODE BEGIN RTOS_THREADS */
-  /* add threads, ... */
-  /* USER CODE END RTOS_THREADS */
-
-  /* Start scheduler */
-  osKernelStart();
-
-  /* We should never get here as control is now taken by the scheduler */
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+
   while (1)
   {
-	   // BSP_LCD_SetTextColor(LCD_COLOR_RED);
-	   // BSP_LCD_DisplayStringAtLine(0,(uint8_t*)"Naglowek 1");
-	   // BSP_LCD_DisplayStringAt(10, 40, (uint8_t*)"Linia", LEFT_MODE);
-	    // BSP_LCD_FillRect(10, 100, 100, 50);
-	  demo();
-	  demo2();
-	  demo3();
-	  demo4();
-	  demo5();
-    /* USER CODE END WHILE */
+	  DBuff_swap_buff();
+	  //BSP_LCD_DrawBitmap(0, 0, (uint8_t *)ironman);
+//    demo();
+//	  demo2();
+//	  demo3();
+//	  demo4();
+//	  demo5();
+	  //animation();
+//	  demo9();
+	  p++;
+	  j+=10;
+	  k+=20;
+//	  BSP_LCD_Clear(LCD_COLOR_WHITE);
+
+	  /* USER CODE END WHILE */
+    MX_USB_HOST_Process();
+
+
 
     /* USER CODE BEGIN 3 */
   }
@@ -724,26 +764,6 @@ static void MX_GPIO_Init(void)
 /* USER CODE BEGIN 4 */
 
 /* USER CODE END 4 */
-
-/* USER CODE BEGIN Header_StartDefaultTask */
-/**
-  * @brief  Function implementing the defaultTask thread.
-  * @param  argument: Not used
-  * @retval None
-  */
-/* USER CODE END Header_StartDefaultTask */
-void StartDefaultTask(void const * argument)
-{
-  /* init code for USB_HOST */
-  MX_USB_HOST_Init();
-  /* USER CODE BEGIN 5 */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
-  /* USER CODE END 5 */
-}
 
 /**
   * @brief  Period elapsed callback in non blocking mode
