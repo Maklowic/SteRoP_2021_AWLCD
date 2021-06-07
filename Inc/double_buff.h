@@ -6,7 +6,7 @@
 
 #include "stm32f429i_discovery_lcd.h"
 
-static int visible_layer = 0;
+static int swap = 0;
 
 
 #define LCD_WIDTH BSP_LCD_GetXSize()
